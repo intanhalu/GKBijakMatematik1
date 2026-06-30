@@ -195,24 +195,6 @@ function generateBentukQuestions() {
     return shuffled.slice(0, 10);
 }
 
-// Generate all 30 questions for perbandingan
-function generatePerbandinganQuestions() {
-    const types = ['panjang', 'besar', 'tebal'];
-    const allQuestions = [];
-    
-    // Create 30 comparison questions (10 of each type)
-    for (let i = 0; i < 30; i++) {
-        const type = types[i % 3];
-        allQuestions.push({
-            type: type
-        });
-    }
-    
-    // Shuffle all 30 questions and return only first 10
-    const shuffled = shuffleArray(allQuestions);
-    return shuffled.slice(0, 10);
-}
-
 function startGame(gameType) {
     gameState.currentGame = gameType;
     gameState.score = 0;
@@ -236,9 +218,6 @@ function startGame(gameType) {
         case 'bentuk':
             gameState.questions = generateBentukQuestions();
             break;
-        case 'perbandingan':
-            gameState.questions = generatePerbandinganQuestions();
-            break;
     }
     
     document.getElementById('mainMenu').classList.add('hidden');
@@ -252,7 +231,7 @@ function backToMenu() {
     document.getElementById('mainMenu').classList.remove('hidden');
     document.getElementById('resultsScreen').classList.add('hidden');
     
-    const games = ['tambahGame', 'tolakGame', 'masaGame', 'wangGame', 'bentukGame', 'perbandinganGame'];
+    const games = ['tambahGame', 'tolakGame', 'masaGame', 'wangGame', 'bentukGame'];
     games.forEach(game => {
         document.getElementById(game).classList.add('hidden');
     });
@@ -289,9 +268,6 @@ function loadQuestion() {
             break;
         case 'bentuk':
             displayBentukQuestion(question);
-            break;
-        case 'perbandingan':
-            displayPerbandinganQuestion(question);
             break;
     }
 }
@@ -396,7 +372,7 @@ function displayMasaQuestion(question) {
         const button = document.createElement('button');
         button.className = 'option-btn';
         button.textContent = `${String(option.hour).padStart(2, '0')}:${String(option.minute).padStart(2, '0')}`;
-        button.onclick = () => checkAnswer(button.textContent, `${String(question.hour).padStart(2, '0')}:${String(question.minute).padStart(2, '0')}`);
+        button.onclick = () => checkAnswer(button.textContent, `${String(question.hour).padStart(2, '0')}:${String(question.minute).padStart(2, '0')}`, 'masa');
         optionsContainer.appendChild(button);
     });
     
@@ -485,7 +461,7 @@ function displayWangQuestion(question) {
         const button = document.createElement('button');
         button.className = 'option-btn';
         button.textContent = option;
-        button.onclick = () => checkAnswer(option, question.amount);
+        button.onclick = () => checkAnswer(option, question.amount, 'wang');
         optionsContainer.appendChild(button);
     });
     
@@ -538,12 +514,13 @@ function displayBentukQuestion(question) {
     const options = [question.shape];
     const availableShapes = allShapes.filter(s => s !== question.shape);
     
+    // Shuffle available shapes and pick 3
+    availableShapes.sort(() => Math.random() - 0.5);
     for (let i = 0; i < 3; i++) {
-        const randomIndex = Math.floor(Math.random() * availableShapes.length);
-        options.push(availableShapes[randomIndex]);
-        availableShapes.splice(randomIndex, 1);
+        options.push(availableShapes[i]);
     }
     
+    // Shuffle all options
     options.sort(() => Math.random() - 0.5);
     
     const optionsContainer = document.getElementById('bentukOptions');
@@ -553,81 +530,11 @@ function displayBentukQuestion(question) {
         const button = document.createElement('button');
         button.className = 'option-btn';
         button.textContent = shapeNames[option];
-        button.onclick = () => checkAnswer(option, question.shape);
+        button.onclick = () => checkBentukAnswer(option, question.shape);
         optionsContainer.appendChild(button);
     });
     
     document.getElementById('bentukFeedback').innerHTML = '';
-}
-
-function displayPerbandinganQuestion(question) {
-    const perbandinganVisual = document.getElementById('perbandinganVisual');
-    perbandinganVisual.innerHTML = '';
-    
-    let visual = '';
-    let questionText = '';
-    let correctAnswer = '';
-    
-    if (question.type === 'panjang') {
-        const isLong = Math.random() > 0.5;
-        if (isLong) {
-            visual = '<div class="comparison-item"><div class="long-line"></div><span>Panjang</span></div>';
-            questionText = 'Garis ini adalah...';
-            correctAnswer = 'panjang';
-        } else {
-            visual = '<div class="comparison-item"><div class="short-line"></div><span>Pendek</span></div>';
-            questionText = 'Garis ini adalah...';
-            correctAnswer = 'pendek';
-        }
-    } else if (question.type === 'besar') {
-        const isBig = Math.random() > 0.5;
-        if (isBig) {
-            visual = '<div class="comparison-item"><div class="big-circle"></div><span>Besar</span></div>';
-            questionText = 'Bulatan ini adalah...';
-            correctAnswer = 'besar';
-        } else {
-            visual = '<div class="comparison-item"><div class="small-circle"></div><span>Kecil</span></div>';
-            questionText = 'Bulatan ini adalah...';
-            correctAnswer = 'kecil';
-        }
-    } else if (question.type === 'tebal') {
-        const isThick = Math.random() > 0.5;
-        if (isThick) {
-            visual = '<div class="comparison-item"><div class="thick-rectangle"></div><span>Tebal</span></div>';
-            questionText = 'Garis segi empat ini adalah...';
-            correctAnswer = 'tebal';
-        } else {
-            visual = '<div class="comparison-item"><div class="thin-rectangle"></div><span>Nipis</span></div>';
-            questionText = 'Garis segi empat ini adalah...';
-            correctAnswer = 'nipis';
-        }
-    }
-    
-    perbandinganVisual.innerHTML = visual;
-    document.getElementById('perbandinganQuestion').textContent = questionText;
-    
-    const options = [correctAnswer];
-    const allOptions = correctAnswer === 'panjang' ? ['pendek'] : 
-                      correctAnswer === 'pendek' ? ['panjang'] :
-                      correctAnswer === 'besar' ? ['kecil'] :
-                      correctAnswer === 'kecil' ? ['besar'] :
-                      correctAnswer === 'tebal' ? ['nipis'] : ['tebal'];
-    
-    options.push(...allOptions);
-    options.sort(() => Math.random() - 0.5);
-    
-    const optionsContainer = document.getElementById('perbandinganOptions');
-    optionsContainer.innerHTML = '';
-    
-    options.forEach(option => {
-        const button = document.createElement('button');
-        button.className = 'option-btn';
-        button.textContent = option.charAt(0).toUpperCase() + option.slice(1);
-        button.onclick = () => checkAnswer(option, correctAnswer);
-        optionsContainer.appendChild(button);
-    });
-    
-    document.getElementById('perbandinganFeedback').innerHTML = '';
 }
 
 function displayOptions(answer, gameType) {
@@ -651,13 +558,65 @@ function displayOptions(answer, gameType) {
         const button = document.createElement('button');
         button.className = 'option-btn';
         button.textContent = option;
-        button.onclick = () => checkAnswer(option, answer);
+        button.onclick = () => checkAnswer(option, answer, gameType);
         optionsContainer.appendChild(button);
     });
 }
 
-function checkAnswer(selectedAnswer, correctAnswer) {
-    const gameType = gameState.currentGame;
+function checkBentukAnswer(selectedAnswer, correctAnswer) {
+    const gameType = 'bentuk';
+    const feedbackElement = document.getElementById('bentukFeedback');
+    const buttons = document.querySelectorAll('#bentukOptions .option-btn');
+    
+    buttons.forEach(btn => btn.disabled = true);
+    
+    const isCorrect = selectedAnswer === correctAnswer;
+    
+    // Get the shape names map
+    const shapeNames = {
+        'circle': 'Bulatan',
+        'square': 'Segiempat Sama',
+        'triangle': 'Segitiga',
+        'rectangle': 'Segiempat Tepat',
+        'star': 'Bintang'
+    };
+    
+    // Highlight the clicked button
+    buttons.forEach(btn => {
+        // Find which shape this button represents
+        let buttonShape = null;
+        for (const [shape, name] of Object.entries(shapeNames)) {
+            if (btn.textContent === name) {
+                buttonShape = shape;
+                break;
+            }
+        }
+        
+        if (buttonShape === selectedAnswer) {
+            if (isCorrect) {
+                btn.classList.add('correct');
+                feedbackElement.classList.remove('wrong');
+                feedbackElement.classList.add('correct');
+                feedbackElement.textContent = '✓ Betul! Bagus sekali!';
+                gameState.score++;
+            } else {
+                btn.classList.add('wrong');
+                feedbackElement.classList.remove('correct');
+                feedbackElement.classList.add('wrong');
+                feedbackElement.textContent = `✗ Salah! Jawapan yang betul ialah ${shapeNames[correctAnswer]}`;
+            }
+        }
+    });
+    
+    document.getElementById('bentukScore').textContent = gameState.score;
+    
+    gameState.currentQuestion++;
+    setTimeout(() => {
+        loadQuestion();
+    }, 2000);
+}
+
+function checkAnswer(selectedAnswer, correctAnswer, gameType) {
     const feedbackElement = document.getElementById(`${gameType}Feedback`);
     const buttons = document.querySelectorAll(`#${gameType}Options .option-btn`);
     
@@ -665,22 +624,27 @@ function checkAnswer(selectedAnswer, correctAnswer) {
     
     let isCorrect = false;
     
-    if (typeof selectedAnswer === 'number' && typeof correctAnswer === 'number') {
+    if (gameType === 'masa') {
+        isCorrect = String(selectedAnswer) === String(correctAnswer);
+    } else if (typeof selectedAnswer === 'number' && typeof correctAnswer === 'number') {
         isCorrect = selectedAnswer === correctAnswer;
     } else {
         isCorrect = String(selectedAnswer) === String(correctAnswer);
     }
     
+    // Highlight the clicked button
     buttons.forEach(btn => {
         let btnValue = btn.textContent;
-        let compareValue = String(selectedAnswer);
         
-        if (!isNaN(btnValue)) {
-            btnValue = parseInt(btnValue);
-            compareValue = parseInt(selectedAnswer);
+        let btnCompare = btnValue;
+        let selectedCompare = String(selectedAnswer);
+        
+        if (!isNaN(btnValue) && !isNaN(selectedAnswer)) {
+            btnCompare = parseInt(btnValue);
+            selectedCompare = parseInt(selectedAnswer);
         }
         
-        if (btnValue === compareValue || btn.textContent === selectedAnswer) {
+        if (btnCompare === selectedCompare || btnValue === selectedAnswer) {
             if (isCorrect) {
                 btn.classList.add('correct');
                 feedbackElement.classList.remove('wrong');
@@ -741,8 +705,7 @@ function showResults() {
         'tolak': 'Tolak',
         'masa': 'Masa',
         'wang': 'Wang',
-        'bentuk': 'Bentuk',
-        'perbandingan': 'Perbandingan'
+        'bentuk': 'Bentuk'
     };
     
     const resultContent = document.getElementById('resultContent');
