@@ -2,16 +2,15 @@
 const gameState = {
     currentGame: null,
     score: 0,
-    totalQuestions: 5,
+    totalQuestions: 20,
     currentQuestion: 0,
     answers: [],
-    currentProblem: null
+    currentProblem: null,
+    questions: []
 };
 
-// Fruit emojis for addition and subtraction
 const fruits = ['🍎', '🍊', '🍌', '🍇', '🍓', '🍉', '🍑', '🥝'];
 
-// Money denominations
 const money = {
     coins: [
         { value: 1, emoji: '🪙', label: '1 sen' },
@@ -28,23 +27,169 @@ const money = {
     ]
 };
 
-// Time options (in 12-hour format)
 const timeOptions = [
+    { hour: 1, minute: 0, label: '1:00' },
+    { hour: 2, minute: 0, label: '2:00' },
     { hour: 3, minute: 0, label: '3:00' },
+    { hour: 4, minute: 0, label: '4:00' },
+    { hour: 5, minute: 0, label: '5:00' },
     { hour: 6, minute: 0, label: '6:00' },
+    { hour: 7, minute: 0, label: '7:00' },
+    { hour: 8, minute: 0, label: '8:00' },
     { hour: 9, minute: 0, label: '9:00' },
+    { hour: 10, minute: 0, label: '10:00' },
+    { hour: 11, minute: 0, label: '11:00' },
     { hour: 12, minute: 0, label: '12:00' },
     { hour: 1, minute: 30, label: '1:30' },
     { hour: 2, minute: 15, label: '2:15' },
-    { hour: 4, minute: 45, label: '4:45' }
+    { hour: 3, minute: 45, label: '3:45' },
+    { hour: 4, minute: 30, label: '4:30' },
+    { hour: 5, minute: 15, label: '5:15' },
+    { hour: 6, minute: 45, label: '6:45' },
+    { hour: 7, minute: 30, label: '7:30' },
+    { hour: 8, minute: 15, label: '8:15' }
 ];
 
-// Start Game Function
+// Generate all 20 questions for tambah
+function generateTambahQuestions() {
+    const questions = [];
+    for (let i = 0; i < 20; i++) {
+        const type = Math.random() > 0.5 ? 'fruit' : 'number';
+        if (type === 'fruit') {
+            const num1 = Math.floor(Math.random() * 5) + 1;
+            const num2 = Math.floor(Math.random() * 5) + 1;
+            questions.push({
+                type: 'fruit',
+                num1: num1,
+                num2: num2,
+                answer: num1 + num2
+            });
+        } else {
+            const num1 = Math.floor(Math.random() * 9) + 1;
+            const num2 = Math.floor(Math.random() * 9) + 1;
+            questions.push({
+                type: 'number',
+                num1: num1,
+                num2: num2,
+                answer: num1 + num2
+            });
+        }
+    }
+    return questions;
+}
+
+// Generate all 20 questions for tolak
+function generateTolakQuestions() {
+    const questions = [];
+    for (let i = 0; i < 20; i++) {
+        const type = Math.random() > 0.5 ? 'fruit' : 'number';
+        if (type === 'fruit') {
+            let num1 = Math.floor(Math.random() * 8) + 3;
+            const num2 = Math.floor(Math.random() * num1) + 1;
+            questions.push({
+                type: 'fruit',
+                num1: num1,
+                num2: num2,
+                answer: num1 - num2
+            });
+        } else {
+            let num1 = Math.floor(Math.random() * 15) + 5;
+            const num2 = Math.floor(Math.random() * num1) + 1;
+            questions.push({
+                type: 'number',
+                num1: num1,
+                num2: num2,
+                answer: num1 - num2
+            });
+        }
+    }
+    return questions;
+}
+
+// Generate all 20 questions for masa
+function generateMasaQuestions() {
+    const questions = [];
+    for (let i = 0; i < 20; i++) {
+        const time = timeOptions[Math.floor(Math.random() * timeOptions.length)];
+        questions.push({
+            hour: time.hour,
+            minute: time.minute,
+            answer: time.label
+        });
+    }
+    return questions;
+}
+
+// Generate all 20 questions for wang
+function generateWangQuestions() {
+    const questions = [];
+    for (let i = 0; i < 20; i++) {
+        const targetAmount = Math.floor(Math.random() * 50) + 5;
+        const moneyTypes = ['coins', 'notes'];
+        const moneyType = moneyTypes[Math.floor(Math.random() * moneyTypes.length)];
+        const combination = generateMoneyCombination(targetAmount, moneyType);
+        questions.push({
+            amount: targetAmount,
+            combination: combination,
+            moneyType: moneyType
+        });
+    }
+    return questions;
+}
+
+// Generate all 20 questions for bentuk
+function generateBentukQuestions() {
+    const shapes = ['circle', 'square', 'triangle', 'rectangle', 'star'];
+    const questions = [];
+    for (let i = 0; i < 20; i++) {
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        questions.push({
+            shape: shape
+        });
+    }
+    return questions;
+}
+
+// Generate all 20 questions for perbandingan
+function generatePerbandinganQuestions() {
+    const types = ['panjang', 'besar', 'tebal'];
+    const questions = [];
+    for (let i = 0; i < 20; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        questions.push({
+            type: type
+        });
+    }
+    return questions;
+}
+
 function startGame(gameType) {
     gameState.currentGame = gameType;
     gameState.score = 0;
     gameState.currentQuestion = 0;
     gameState.answers = [];
+    
+    // Generate all questions based on game type
+    switch(gameType) {
+        case 'tambah':
+            gameState.questions = generateTambahQuestions();
+            break;
+        case 'tolak':
+            gameState.questions = generateTolakQuestions();
+            break;
+        case 'masa':
+            gameState.questions = generateMasaQuestions();
+            break;
+        case 'wang':
+            gameState.questions = generateWangQuestions();
+            break;
+        case 'bentuk':
+            gameState.questions = generateBentukQuestions();
+            break;
+        case 'perbandingan':
+            gameState.questions = generatePerbandinganQuestions();
+            break;
+    }
     
     document.getElementById('mainMenu').classList.add('hidden');
     document.getElementById('resultsScreen').classList.add('hidden');
@@ -53,12 +198,11 @@ function startGame(gameType) {
     loadQuestion();
 }
 
-// Back to Menu Function
 function backToMenu() {
     document.getElementById('mainMenu').classList.remove('hidden');
     document.getElementById('resultsScreen').classList.add('hidden');
     
-    const games = ['tambahGame', 'tolakGame', 'masaGame', 'wangGame'];
+    const games = ['tambahGame', 'tolakGame', 'masaGame', 'wangGame', 'bentukGame', 'perbandinganGame'];
     games.forEach(game => {
         document.getElementById(game).classList.add('hidden');
     });
@@ -66,7 +210,6 @@ function backToMenu() {
     gameState.currentGame = null;
 }
 
-// Load Question Based on Game Type
 function loadQuestion() {
     if (gameState.currentQuestion >= gameState.totalQuestions) {
         showResults();
@@ -74,167 +217,123 @@ function loadQuestion() {
     }
 
     const gameType = gameState.currentGame;
+    const question = gameState.questions[gameState.currentQuestion];
+    
+    // Update progress bar
+    const percentage = (gameState.currentQuestion / gameState.totalQuestions) * 100;
+    document.getElementById(`${gameType}Progress`).style.width = percentage + '%';
+    document.getElementById(`${gameType}QNum`).textContent = gameState.currentQuestion + 1;
     
     switch(gameType) {
         case 'tambah':
-            generateTambahQuestion();
+            displayTambahQuestion(question);
             break;
         case 'tolak':
-            generateTolakQuestion();
+            displayTolakQuestion(question);
             break;
         case 'masa':
-            generateMasaQuestion();
+            displayMasaQuestion(question);
             break;
         case 'wang':
-            generateWangQuestion();
+            displayWangQuestion(question);
+            break;
+        case 'bentuk':
+            displayBentukQuestion(question);
+            break;
+        case 'perbandingan':
+            displayPerbandinganQuestion(question);
             break;
     }
 }
 
-// TAMBAH (Addition) Game
-function generateTambahQuestion() {
-    const num1 = Math.floor(Math.random() * 5) + 1; // 1-5
-    const num2 = Math.floor(Math.random() * 5) + 1; // 1-5
-    const answer = num1 + num2;
-    
-    gameState.currentProblem = {
-        num1: num1,
-        num2: num2,
-        answer: answer
-    };
-    
-    displayTambahQuestion(num1, num2, answer);
-}
-
-function displayTambahQuestion(num1, num2, answer) {
+function displayTambahQuestion(question) {
     document.getElementById('fruit-group1').innerHTML = '';
     document.getElementById('fruit-group2').innerHTML = '';
     
-    const selectedFruit = fruits[Math.floor(Math.random() * fruits.length)];
-    
-    for (let i = 0; i < num1; i++) {
-        const fruit = document.createElement('div');
-        fruit.className = 'fruit';
-        fruit.textContent = selectedFruit;
-        document.getElementById('fruit-group1').appendChild(fruit);
-    }
-    
-    for (let i = 0; i < num2; i++) {
-        const fruit = document.createElement('div');
-        fruit.className = 'fruit';
-        fruit.textContent = selectedFruit;
-        document.getElementById('fruit-group2').appendChild(fruit);
-    }
-    
-    const options = [answer];
-    while (options.length < 4) {
-        const option = Math.floor(Math.random() * 10) + 1;
-        if (!options.includes(option)) {
-            options.push(option);
+    if (question.type === 'fruit') {
+        const selectedFruit = fruits[Math.floor(Math.random() * fruits.length)];
+        
+        for (let i = 0; i < question.num1; i++) {
+            const fruit = document.createElement('div');
+            fruit.className = 'fruit';
+            fruit.textContent = selectedFruit;
+            document.getElementById('fruit-group1').appendChild(fruit);
         }
+        
+        for (let i = 0; i < question.num2; i++) {
+            const fruit = document.createElement('div');
+            fruit.className = 'fruit';
+            fruit.textContent = selectedFruit;
+            document.getElementById('fruit-group2').appendChild(fruit);
+        }
+    } else {
+        const num1 = document.createElement('div');
+        num1.className = 'number-display';
+        num1.textContent = question.num1;
+        document.getElementById('fruit-group1').appendChild(num1);
+        
+        const num2 = document.createElement('div');
+        num2.className = 'number-display';
+        num2.textContent = question.num2;
+        document.getElementById('fruit-group2').appendChild(num2);
     }
     
-    options.sort(() => Math.random() - 0.5);
-    
-    const optionsContainer = document.getElementById('tambahOptions');
-    optionsContainer.innerHTML = '';
-    
-    options.forEach(option => {
-        const button = document.createElement('button');
-        button.className = 'option-btn';
-        button.textContent = option;
-        button.onclick = () => checkAnswer(option, answer);
-        optionsContainer.appendChild(button);
-    });
-    
+    displayOptions(question.answer, 'tambah');
     document.getElementById('tambahFeedback').innerHTML = '';
 }
 
-// TOLAK (Subtraction) Game
-function generateTolakQuestion() {
-    let num1 = Math.floor(Math.random() * 8) + 3; // 3-10
-    const num2 = Math.floor(Math.random() * num1) + 1; // Less than num1
-    const answer = num1 - num2;
-    
-    gameState.currentProblem = {
-        num1: num1,
-        num2: num2,
-        answer: answer
-    };
-    
-    displayTolakQuestion(num1, num2, answer);
-}
-
-function displayTolakQuestion(num1, num2, answer) {
+function displayTolakQuestion(question) {
     document.getElementById('fruit-group3').innerHTML = '';
     document.getElementById('fruit-group4').innerHTML = '';
     
-    const selectedFruit = fruits[Math.floor(Math.random() * fruits.length)];
-    
-    for (let i = 0; i < num1; i++) {
-        const fruit = document.createElement('div');
-        fruit.className = 'fruit';
-        fruit.textContent = selectedFruit;
-        document.getElementById('fruit-group3').appendChild(fruit);
-    }
-    
-    const group4 = document.getElementById('fruit-group4');
-    for (let i = 0; i < num2; i++) {
-        const fruit = document.createElement('div');
-        fruit.className = 'fruit';
-        fruit.textContent = selectedFruit;
-        fruit.style.opacity = '0.5';
-        fruit.style.textDecoration = 'line-through';
-        group4.appendChild(fruit);
-    }
-    
-    const options = [answer];
-    while (options.length < 4) {
-        const option = Math.floor(Math.random() * 10) + 1;
-        if (!options.includes(option)) {
-            options.push(option);
+    if (question.type === 'fruit') {
+        const selectedFruit = fruits[Math.floor(Math.random() * fruits.length)];
+        
+        for (let i = 0; i < question.num1; i++) {
+            const fruit = document.createElement('div');
+            fruit.className = 'fruit';
+            fruit.textContent = selectedFruit;
+            document.getElementById('fruit-group3').appendChild(fruit);
         }
+        
+        const group4 = document.getElementById('fruit-group4');
+        for (let i = 0; i < question.num2; i++) {
+            const fruit = document.createElement('div');
+            fruit.className = 'fruit';
+            fruit.textContent = selectedFruit;
+            fruit.style.opacity = '0.5';
+            fruit.style.textDecoration = 'line-through';
+            group4.appendChild(fruit);
+        }
+    } else {
+        const num1 = document.createElement('div');
+        num1.className = 'number-display';
+        num1.textContent = question.num1;
+        document.getElementById('fruit-group3').appendChild(num1);
+        
+        const group4 = document.getElementById('fruit-group4');
+        const num2 = document.createElement('div');
+        num2.className = 'number-display';
+        num2.textContent = question.num2;
+        num2.style.opacity = '0.5';
+        num2.style.textDecoration = 'line-through';
+        group4.appendChild(num2);
     }
     
-    options.sort(() => Math.random() - 0.5);
-    
-    const optionsContainer = document.getElementById('tolakOptions');
-    optionsContainer.innerHTML = '';
-    
-    options.forEach(option => {
-        const button = document.createElement('button');
-        button.className = 'option-btn';
-        button.textContent = option;
-        button.onclick = () => checkAnswer(option, answer);
-        optionsContainer.appendChild(button);
-    });
-    
+    displayOptions(question.answer, 'tolak');
     document.getElementById('tolakFeedback').innerHTML = '';
 }
 
-// MASA (Time) Game
-function generateMasaQuestion() {
-    const time = timeOptions[Math.floor(Math.random() * timeOptions.length)];
-    
-    gameState.currentProblem = {
-        time: time,
-        answer: time.label
-    };
-    
-    displayMasaQuestion(time);
-}
-
-function displayMasaQuestion(time) {
-    drawClock(time.hour, time.minute);
-    
+function displayMasaQuestion(question) {
+    drawClock(question.hour, question.minute);
     document.getElementById('masaQuestion').textContent = 'Berapa jam menunjukkan jam tersebut?';
     
-    const options = [time.label];
-    const availableTimes = timeOptions.filter(t => t.label !== time.label);
+    const options = [question];
+    const availableTimes = gameState.questions.filter((q, i) => i !== gameState.currentQuestion);
     
     for (let i = 0; i < 3 && availableTimes.length > 0; i++) {
         const randomIndex = Math.floor(Math.random() * availableTimes.length);
-        options.push(availableTimes[randomIndex].label);
+        options.push(availableTimes[randomIndex]);
         availableTimes.splice(randomIndex, 1);
     }
     
@@ -246,8 +345,8 @@ function displayMasaQuestion(time) {
     options.forEach(option => {
         const button = document.createElement('button');
         button.className = 'option-btn';
-        button.textContent = option;
-        button.onclick = () => checkAnswer(option, time.label);
+        button.textContent = `${String(option.hour).padStart(2, '0')}:${String(option.minute).padStart(2, '0')}`;
+        button.onclick = () => checkAnswer(button.textContent, `${String(question.hour).padStart(2, '0')}:${String(question.minute).padStart(2, '0')}`);
         optionsContainer.appendChild(button);
     });
     
@@ -268,21 +367,41 @@ function drawClock(hour, minute) {
     hourHand.setAttribute('y2', 100 - 40 * Math.cos(hourAngle * Math.PI / 180));
 }
 
-// WANG (Money) Game
-function generateWangQuestion() {
-    const targetAmount = Math.floor(Math.random() * 50) + 5; // 5-55
-    const moneyTypes = ['coins', 'notes'];
-    const moneyType = moneyTypes[Math.floor(Math.random() * moneyTypes.length)];
+function displayWangQuestion(question) {
+    const moneyVisual = document.getElementById('moneyVisual');
+    moneyVisual.innerHTML = '';
     
-    const combination = generateMoneyCombination(targetAmount, moneyType);
+    question.combination.forEach(item => {
+        const element = document.createElement('div');
+        element.style.fontSize = '3em';
+        element.textContent = item.emoji;
+        moneyVisual.appendChild(element);
+    });
     
-    gameState.currentProblem = {
-        amount: targetAmount,
-        combination: combination,
-        moneyType: moneyType
-    };
+    document.getElementById('wangQuestion').textContent = 'Jumlah wang di atas ialah berapa?';
     
-    displayWangQuestion(combination, targetAmount);
+    const options = [question.amount];
+    while (options.length < 4) {
+        const option = Math.floor(Math.random() * 100) + 1;
+        if (!options.includes(option)) {
+            options.push(option);
+        }
+    }
+    
+    options.sort(() => Math.random() - 0.5);
+    
+    const optionsContainer = document.getElementById('wangOptions');
+    optionsContainer.innerHTML = '';
+    
+    options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = option;
+        button.onclick = () => checkAnswer(option, question.amount);
+        optionsContainer.appendChild(button);
+    });
+    
+    document.getElementById('wangFeedback').innerHTML = '';
 }
 
 function generateMoneyCombination(amount, type) {
@@ -303,22 +422,133 @@ function generateMoneyCombination(amount, type) {
     return combination;
 }
 
-function displayWangQuestion(combination, targetAmount) {
-    const moneyVisual = document.getElementById('moneyVisual');
-    moneyVisual.innerHTML = '';
+function displayBentukQuestion(question) {
+    const bentukVisual = document.getElementById('bentukVisual');
+    bentukVisual.innerHTML = '';
     
-    combination.forEach(item => {
-        const element = document.createElement('div');
-        element.style.fontSize = '3em';
-        element.textContent = item.emoji;
-        moneyVisual.appendChild(element);
+    const shapes = {
+        'circle': '<div class="shape circle"></div>',
+        'square': '<div class="shape square"></div>',
+        'triangle': '<div class="shape triangle"></div>',
+        'rectangle': '<div class="shape rectangle"></div>',
+        'star': '<div class="star shape">⭐</div>'
+    };
+    
+    bentukVisual.innerHTML = shapes[question.shape];
+    
+    const shapeNames = {
+        'circle': 'Bulatan',
+        'square': 'Segiempat Sama',
+        'triangle': 'Segitiga',
+        'rectangle': 'Segiempat Tepat',
+        'star': 'Bintang'
+    };
+    
+    document.getElementById('bentukQuestion').textContent = 'Apakah nama bentuk ini?';
+    
+    const allShapes = ['circle', 'square', 'triangle', 'rectangle', 'star'];
+    const options = [question.shape];
+    const availableShapes = allShapes.filter(s => s !== question.shape);
+    
+    for (let i = 0; i < 3; i++) {
+        const randomIndex = Math.floor(Math.random() * availableShapes.length);
+        options.push(availableShapes[randomIndex]);
+        availableShapes.splice(randomIndex, 1);
+    }
+    
+    options.sort(() => Math.random() - 0.5);
+    
+    const optionsContainer = document.getElementById('bentukOptions');
+    optionsContainer.innerHTML = '';
+    
+    options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = shapeNames[option];
+        button.onclick = () => checkAnswer(option, question.shape);
+        optionsContainer.appendChild(button);
     });
     
-    document.getElementById('wangQuestion').textContent = `Jumlah wang di atas ialah berapa?`;
+    document.getElementById('bentukFeedback').innerHTML = '';
+}
+
+function displayPerbandinganQuestion(question) {
+    const perbandinganVisual = document.getElementById('perbandinganVisual');
+    perbandinganVisual.innerHTML = '';
     
-    const options = [targetAmount];
+    let visual = '';
+    let questionText = '';
+    let correctAnswer = '';
+    
+    if (question.type === 'panjang') {
+        const isLong = Math.random() > 0.5;
+        if (isLong) {
+            visual = '<div class="comparison-item"><div class="long-line"></div><span>Panjang</span></div>';
+            questionText = 'Garis ini adalah...';
+            correctAnswer = 'panjang';
+        } else {
+            visual = '<div class="comparison-item"><div class="short-line"></div><span>Pendek</span></div>';
+            questionText = 'Garis ini adalah...';
+            correctAnswer = 'pendek';
+        }
+    } else if (question.type === 'besar') {
+        const isBig = Math.random() > 0.5;
+        if (isBig) {
+            visual = '<div class="comparison-item"><div class="big-circle"></div><span>Besar</span></div>';
+            questionText = 'Bulatan ini adalah...';
+            correctAnswer = 'besar';
+        } else {
+            visual = '<div class="comparison-item"><div class="small-circle"></div><span>Kecil</span></div>';
+            questionText = 'Bulatan ini adalah...';
+            correctAnswer = 'kecil';
+        }
+    } else if (question.type === 'tebal') {
+        const isThick = Math.random() > 0.5;
+        if (isThick) {
+            visual = '<div class="comparison-item"><div class="thick-rectangle"></div><span>Tebal</span></div>';
+            questionText = 'Garis segi empat ini adalah...';
+            correctAnswer = 'tebal';
+        } else {
+            visual = '<div class="comparison-item"><div class="thin-rectangle"></div><span>Nipis</span></div>';
+            questionText = 'Garis segi empat ini adalah...';
+            correctAnswer = 'nipis';
+        }
+    }
+    
+    perbandinganVisual.innerHTML = visual;
+    document.getElementById('perbandinganQuestion').textContent = questionText;
+    
+    const options = [correctAnswer];
+    const allOptions = correctAnswer === 'panjang' ? ['pendek'] : 
+                      correctAnswer === 'pendek' ? ['panjang'] :
+                      correctAnswer === 'besar' ? ['kecil'] :
+                      correctAnswer === 'kecil' ? ['besar'] :
+                      correctAnswer === 'tebal' ? ['nipis'] : ['tebal'];
+    
+    options.push(...allOptions);
+    options.sort(() => Math.random() - 0.5);
+    
+    const optionsContainer = document.getElementById('perbandinganOptions');
+    optionsContainer.innerHTML = '';
+    
+    options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = option.charAt(0).toUpperCase() + option.slice(1);
+        button.onclick = () => checkAnswer(option, correctAnswer);
+        optionsContainer.appendChild(button);
+    });
+    
+    document.getElementById('perbandinganFeedback').innerHTML = '';
+}
+
+function displayOptions(answer, gameType) {
+    let maxRange = 10;
+    if (gameType === 'tolak') maxRange = 15;
+    
+    const options = [answer];
     while (options.length < 4) {
-        const option = Math.floor(Math.random() * 100) + 1;
+        const option = Math.floor(Math.random() * maxRange) + 1;
         if (!options.includes(option)) {
             options.push(option);
         }
@@ -326,21 +556,18 @@ function displayWangQuestion(combination, targetAmount) {
     
     options.sort(() => Math.random() - 0.5);
     
-    const optionsContainer = document.getElementById('wangOptions');
+    const optionsContainer = document.getElementById(`${gameType}Options`);
     optionsContainer.innerHTML = '';
     
     options.forEach(option => {
         const button = document.createElement('button');
         button.className = 'option-btn';
         button.textContent = option;
-        button.onclick = () => checkAnswer(option, targetAmount);
+        button.onclick = () => checkAnswer(option, answer);
         optionsContainer.appendChild(button);
     });
-    
-    document.getElementById('wangFeedback').innerHTML = '';
 }
 
-// Check Answer Function
 function checkAnswer(selectedAnswer, correctAnswer) {
     const gameType = gameState.currentGame;
     const feedbackElement = document.getElementById(`${gameType}Feedback`);
@@ -348,10 +575,24 @@ function checkAnswer(selectedAnswer, correctAnswer) {
     
     buttons.forEach(btn => btn.disabled = true);
     
-    const isCorrect = selectedAnswer === correctAnswer;
+    let isCorrect = false;
+    
+    if (typeof selectedAnswer === 'number' && typeof correctAnswer === 'number') {
+        isCorrect = selectedAnswer === correctAnswer;
+    } else {
+        isCorrect = String(selectedAnswer) === String(correctAnswer);
+    }
     
     buttons.forEach(btn => {
-        if (parseInt(btn.textContent) === selectedAnswer || btn.textContent === selectedAnswer) {
+        let btnValue = btn.textContent;
+        let compareValue = String(selectedAnswer);
+        
+        if (!isNaN(btnValue)) {
+            btnValue = parseInt(btnValue);
+            compareValue = parseInt(selectedAnswer);
+        }
+        
+        if (btnValue === compareValue || btn.textContent === selectedAnswer) {
             if (isCorrect) {
                 btn.classList.add('correct');
                 feedbackElement.classList.remove('wrong');
@@ -375,7 +616,6 @@ function checkAnswer(selectedAnswer, correctAnswer) {
     }, 2000);
 }
 
-// Show Results Function
 function showResults() {
     const gameType = gameState.currentGame;
     const score = gameState.score;
@@ -383,7 +623,6 @@ function showResults() {
     const percentage = Math.round((score / total) * 100);
     
     document.getElementById(`${gameType}Game`).classList.add('hidden');
-    
     document.getElementById('resultsScreen').classList.remove('hidden');
     
     let emoji = '😢';
@@ -392,22 +631,30 @@ function showResults() {
     if (percentage === 100) {
         emoji = '🏆';
         message = 'Sempurna! Anda bijak!';
-    } else if (percentage >= 80) {
+    } else if (percentage >= 90) {
         emoji = '😄';
-        message = 'Luar biasa!';
-    } else if (percentage >= 60) {
+        message = 'Luar biasa! Sangat cemerlang!';
+    } else if (percentage >= 80) {
         emoji = '😊';
         message = 'Bagus! Teruskan berlatih.';
-    } else if (percentage >= 40) {
+    } else if (percentage >= 70) {
+        emoji = '👍';
+        message = 'Lumayan! Boleh lebih baik.';
+    } else if (percentage >= 60) {
         emoji = '😐';
         message = 'Anda boleh lebih baik. Cuba lagi!';
+    } else {
+        emoji = '😢';
+        message = 'Teruskan berlatih, pasti boleh!';
     }
     
     const gameNames = {
         'tambah': 'Tambah',
         'tolak': 'Tolak',
         'masa': 'Masa',
-        'wang': 'Wang'
+        'wang': 'Wang',
+        'bentuk': 'Bentuk',
+        'perbandingan': 'Perbandingan'
     };
     
     const resultContent = document.getElementById('resultContent');
