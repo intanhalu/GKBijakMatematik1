@@ -2,7 +2,7 @@
 const gameState = {
     currentGame: null,
     score: 0,
-    totalQuestions: 20,
+    totalQuestions: 10,
     currentQuestion: 0,
     answers: [],
     currentProblem: null,
@@ -47,120 +47,170 @@ const timeOptions = [
     { hour: 5, minute: 15, label: '5:15' },
     { hour: 6, minute: 45, label: '6:45' },
     { hour: 7, minute: 30, label: '7:30' },
-    { hour: 8, minute: 15, label: '8:15' }
+    { hour: 8, minute: 15, label: '8:15' },
+    { hour: 9, minute: 30, label: '9:30' },
+    { hour: 10, minute: 45, label: '10:45' },
+    { hour: 11, minute: 15, label: '11:15' },
+    { hour: 12, minute: 30, label: '12:30' },
+    { hour: 2, minute: 30, label: '2:30' },
+    { hour: 3, minute: 15, label: '3:15' },
+    { hour: 4, minute: 15, label: '4:15' },
+    { hour: 5, minute: 45, label: '5:45' },
+    { hour: 6, minute: 30, label: '6:30' },
+    { hour: 7, minute: 15, label: '7:15' }
 ];
 
-// Generate all 20 questions for tambah
+// Shuffle array function
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+// Generate all 30 questions for tambah
 function generateTambahQuestions() {
-    const questions = [];
-    for (let i = 0; i < 20; i++) {
-        const type = Math.random() > 0.5 ? 'fruit' : 'number';
-        if (type === 'fruit') {
-            const num1 = Math.floor(Math.random() * 5) + 1;
-            const num2 = Math.floor(Math.random() * 5) + 1;
-            questions.push({
-                type: 'fruit',
-                num1: num1,
-                num2: num2,
-                answer: num1 + num2
-            });
-        } else {
-            const num1 = Math.floor(Math.random() * 9) + 1;
-            const num2 = Math.floor(Math.random() * 9) + 1;
-            questions.push({
-                type: 'number',
-                num1: num1,
-                num2: num2,
-                answer: num1 + num2
-            });
-        }
+    const allQuestions = [];
+    
+    // Create 15 fruit-based questions
+    for (let i = 0; i < 15; i++) {
+        const num1 = Math.floor(Math.random() * 5) + 1;
+        const num2 = Math.floor(Math.random() * 5) + 1;
+        allQuestions.push({
+            type: 'fruit',
+            num1: num1,
+            num2: num2,
+            answer: num1 + num2
+        });
     }
-    return questions;
+    
+    // Create 15 number-based questions
+    for (let i = 0; i < 15; i++) {
+        const num1 = Math.floor(Math.random() * 9) + 1;
+        const num2 = Math.floor(Math.random() * 9) + 1;
+        allQuestions.push({
+            type: 'number',
+            num1: num1,
+            num2: num2,
+            answer: num1 + num2
+        });
+    }
+    
+    // Shuffle all 30 questions and return only first 10
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 }
 
-// Generate all 20 questions for tolak
+// Generate all 30 questions for tolak
 function generateTolakQuestions() {
-    const questions = [];
-    for (let i = 0; i < 20; i++) {
-        const type = Math.random() > 0.5 ? 'fruit' : 'number';
-        if (type === 'fruit') {
-            let num1 = Math.floor(Math.random() * 8) + 3;
-            const num2 = Math.floor(Math.random() * num1) + 1;
-            questions.push({
-                type: 'fruit',
-                num1: num1,
-                num2: num2,
-                answer: num1 - num2
-            });
-        } else {
-            let num1 = Math.floor(Math.random() * 15) + 5;
-            const num2 = Math.floor(Math.random() * num1) + 1;
-            questions.push({
-                type: 'number',
-                num1: num1,
-                num2: num2,
-                answer: num1 - num2
-            });
-        }
+    const allQuestions = [];
+    
+    // Create 15 fruit-based questions
+    for (let i = 0; i < 15; i++) {
+        let num1 = Math.floor(Math.random() * 8) + 3;
+        const num2 = Math.floor(Math.random() * num1) + 1;
+        allQuestions.push({
+            type: 'fruit',
+            num1: num1,
+            num2: num2,
+            answer: num1 - num2
+        });
     }
-    return questions;
+    
+    // Create 15 number-based questions
+    for (let i = 0; i < 15; i++) {
+        let num1 = Math.floor(Math.random() * 15) + 5;
+        const num2 = Math.floor(Math.random() * num1) + 1;
+        allQuestions.push({
+            type: 'number',
+            num1: num1,
+            num2: num2,
+            answer: num1 - num2
+        });
+    }
+    
+    // Shuffle all 30 questions and return only first 10
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 }
 
-// Generate all 20 questions for masa
+// Generate all 30 questions for masa
 function generateMasaQuestions() {
-    const questions = [];
-    for (let i = 0; i < 20; i++) {
+    const allQuestions = [];
+    
+    // Create 30 time questions
+    for (let i = 0; i < 30; i++) {
         const time = timeOptions[Math.floor(Math.random() * timeOptions.length)];
-        questions.push({
+        allQuestions.push({
             hour: time.hour,
             minute: time.minute,
             answer: time.label
         });
     }
-    return questions;
+    
+    // Shuffle all 30 questions and return only first 10
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 }
 
-// Generate all 20 questions for wang
+// Generate all 30 questions for wang
 function generateWangQuestions() {
-    const questions = [];
-    for (let i = 0; i < 20; i++) {
+    const allQuestions = [];
+    
+    // Create 30 money questions
+    for (let i = 0; i < 30; i++) {
         const targetAmount = Math.floor(Math.random() * 50) + 5;
         const moneyTypes = ['coins', 'notes'];
         const moneyType = moneyTypes[Math.floor(Math.random() * moneyTypes.length)];
         const combination = generateMoneyCombination(targetAmount, moneyType);
-        questions.push({
+        allQuestions.push({
             amount: targetAmount,
             combination: combination,
             moneyType: moneyType
         });
     }
-    return questions;
+    
+    // Shuffle all 30 questions and return only first 10
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 }
 
-// Generate all 20 questions for bentuk
+// Generate all 30 questions for bentuk
 function generateBentukQuestions() {
     const shapes = ['circle', 'square', 'triangle', 'rectangle', 'star'];
-    const questions = [];
-    for (let i = 0; i < 20; i++) {
-        const shape = shapes[Math.floor(Math.random() * shapes.length)];
-        questions.push({
+    const allQuestions = [];
+    
+    // Create 30 shape questions (6 of each shape)
+    for (let i = 0; i < 30; i++) {
+        const shape = shapes[i % 5];
+        allQuestions.push({
             shape: shape
         });
     }
-    return questions;
+    
+    // Shuffle all 30 questions and return only first 10
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 }
 
-// Generate all 20 questions for perbandingan
+// Generate all 30 questions for perbandingan
 function generatePerbandinganQuestions() {
     const types = ['panjang', 'besar', 'tebal'];
-    const questions = [];
-    for (let i = 0; i < 20; i++) {
-        const type = types[Math.floor(Math.random() * types.length)];
-        questions.push({
+    const allQuestions = [];
+    
+    // Create 30 comparison questions (10 of each type)
+    for (let i = 0; i < 30; i++) {
+        const type = types[i % 3];
+        allQuestions.push({
             type: type
         });
     }
-    return questions;
+    
+    // Shuffle all 30 questions and return only first 10
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 }
 
 function startGame(gameType) {
@@ -169,7 +219,7 @@ function startGame(gameType) {
     gameState.currentQuestion = 0;
     gameState.answers = [];
     
-    // Generate all questions based on game type
+    // Generate 30 questions, shuffle them, and take 10
     switch(gameType) {
         case 'tambah':
             gameState.questions = generateTambahQuestions();
@@ -371,12 +421,50 @@ function displayWangQuestion(question) {
     const moneyVisual = document.getElementById('moneyVisual');
     moneyVisual.innerHTML = '';
     
+    // Create a container for money items with labels
+    const moneyItemsMap = {};
+    
     question.combination.forEach(item => {
-        const element = document.createElement('div');
-        element.style.fontSize = '3em';
-        element.textContent = item.emoji;
-        moneyVisual.appendChild(element);
+        const key = item.label;
+        if (!moneyItemsMap[key]) {
+            moneyItemsMap[key] = 0;
+        }
+        moneyItemsMap[key]++;
     });
+    
+    // Display each unique money item with count
+    for (const [label, count] of Object.entries(moneyItemsMap)) {
+        const itemContainer = document.createElement('div');
+        itemContainer.style.display = 'flex';
+        itemContainer.style.flexDirection = 'column';
+        itemContainer.style.alignItems = 'center';
+        itemContainer.style.gap = '5px';
+        
+        // Display emojis
+        const emojiContainer = document.createElement('div');
+        emojiContainer.style.display = 'flex';
+        emojiContainer.style.gap = '5px';
+        emojiContainer.style.flexWrap = 'wrap';
+        emojiContainer.style.justifyContent = 'center';
+        
+        for (let i = 0; i < count; i++) {
+            const element = document.createElement('span');
+            element.style.fontSize = '2.5em';
+            element.textContent = question.combination.find(c => c.label === label).emoji;
+            emojiContainer.appendChild(element);
+        }
+        
+        // Display label in BLACK color
+        const labelElement = document.createElement('div');
+        labelElement.style.fontSize = '1em';
+        labelElement.style.fontWeight = 'bold';
+        labelElement.style.color = 'black';
+        labelElement.textContent = label;
+        
+        itemContainer.appendChild(emojiContainer);
+        itemContainer.appendChild(labelElement);
+        moneyVisual.appendChild(itemContainer);
+    }
     
     document.getElementById('wangQuestion').textContent = 'Jumlah wang di atas ialah berapa?';
     
