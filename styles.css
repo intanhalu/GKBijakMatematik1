@@ -41,7 +41,6 @@ header p {
     opacity: 0.95;
 }
 
-/* Menu Screens */
 .menu-screen {
     padding: 40px 20px;
     text-align: center;
@@ -122,7 +121,15 @@ header p {
     color: #333;
 }
 
-/* Game Screens */
+.menu-buttons .menu-btn:nth-child(5) {
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    color: #333;
+}
+
+.menu-buttons .menu-btn:nth-child(6) {
+    background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);
+}
+
 .game-screen {
     padding: 20px;
 }
@@ -135,7 +142,7 @@ header p {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 10px;
 }
@@ -174,6 +181,29 @@ header p {
     font-size: 1.1em;
 }
 
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.3s ease;
+}
+
+.question-counter {
+    text-align: center;
+    color: #667eea;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
 .game-content {
     background: #f8f9fa;
     padding: 30px;
@@ -181,7 +211,6 @@ header p {
     text-align: center;
 }
 
-/* Picture Addition/Subtraction */
 .picture-addition, .picture-subtraction {
     margin-bottom: 30px;
 }
@@ -213,6 +242,13 @@ header p {
     animation: bounce 0.6s ease-in-out;
 }
 
+.number-display {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #667eea;
+    animation: bounce 0.6s ease-in-out;
+}
+
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
@@ -240,7 +276,6 @@ header p {
     border-radius: 15px;
 }
 
-/* Clock Display */
 .clock-display {
     margin-bottom: 30px;
     display: flex;
@@ -252,7 +287,6 @@ header p {
     filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.2));
 }
 
-/* Money Display */
 .money-display {
     margin-bottom: 30px;
     min-height: 150px;
@@ -285,7 +319,112 @@ header p {
     50% { transform: translateY(-10px); }
 }
 
-/* Question Text */
+.bentuk-display, .perbandingan-display {
+    margin-bottom: 30px;
+    min-height: 180px;
+}
+
+.bentuk-visual, .perbandingan-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.shape {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    animation: pulse-shape 2s ease-in-out infinite;
+}
+
+@keyframes pulse-shape {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #667eea;
+}
+
+.square {
+    width: 100px;
+    height: 100px;
+    background: #f5576c;
+}
+
+.triangle {
+    width: 0;
+    height: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+    border-bottom: 100px solid #43e97b;
+}
+
+.rectangle {
+    width: 120px;
+    height: 80px;
+    background: #fa709a;
+}
+
+.star {
+    font-size: 4em;
+    animation: pulse-shape 2s ease-in-out infinite;
+}
+
+.comparison-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.short-line {
+    width: 50px;
+    height: 5px;
+    background: #667eea;
+    border-radius: 3px;
+}
+
+.long-line {
+    width: 150px;
+    height: 5px;
+    background: #667eea;
+    border-radius: 3px;
+}
+
+.small-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #f5576c;
+}
+
+.big-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #f5576c;
+}
+
+.thin-rectangle {
+    width: 100px;
+    height: 20px;
+    background: #43e97b;
+    border-radius: 5px;
+}
+
+.thick-rectangle {
+    width: 100px;
+    height: 60px;
+    background: #43e97b;
+    border-radius: 5px;
+}
+
 .question-text {
     font-size: 1.3em;
     color: #333;
@@ -293,7 +432,6 @@ header p {
     font-weight: bold;
 }
 
-/* Options */
 .options {
     margin: 30px 0;
 }
@@ -358,7 +496,6 @@ header p {
     75% { transform: translateX(10px); }
 }
 
-/* Feedback */
 .feedback {
     margin-top: 20px;
     font-size: 1.2em;
@@ -374,7 +511,6 @@ header p {
     color: #f5576c;
 }
 
-/* Results */
 .results-container {
     background: white;
 }
