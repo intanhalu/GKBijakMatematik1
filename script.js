@@ -1,6 +1,7 @@
 // Game State
 const gameState = {
     currentGame: null,
+    currentDifficulty: null,
     score: 0,
     totalQuestions: 10,
     currentQuestion: 0,
@@ -68,6 +69,36 @@ function shuffleArray(array) {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+}
+
+// Generate questions for Kenali Nombor (Recognize Numbers)
+function generateKenaliNomborQuestions(difficulty) {
+    const allQuestions = [];
+    let minRange, maxRange;
+    
+    if (difficulty === 'beginner') {
+        minRange = 1;
+        maxRange = 10;
+    } else if (difficulty === 'intermediate') {
+        minRange = 10;
+        maxRange = 50;
+    } else if (difficulty === 'advanced') {
+        minRange = 50;
+        maxRange = 100;
+    }
+    
+    // Create 30 questions with random counts
+    for (let i = 0; i < 30; i++) {
+        const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+        allQuestions.push({
+            count: count,
+            type: 'items'
+        });
+    }
+    
+    // Shuffle and return first 10
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 }
 
 // Generate all 30 questions for tambah
@@ -195,32 +226,35 @@ function generateBentukQuestions() {
     return shuffled.slice(0, 10);
 }
 
-function startGame(gameType) {
+function startDifficultySelection(gameType) {
+    document.getElementById('mainMenu').classList.add('hidden');
+    document.getElementById('difficultySelection').classList.remove('hidden');
+}
+
+function startGame(gameType, difficulty = null) {
     gameState.currentGame = gameType;
+    gameState.currentDifficulty = difficulty;
     gameState.score = 0;
     gameState.currentQuestion = 0;
     gameState.answers = [];
     
-    // Generate 30 questions, shuffle them, and take 10
-    switch(gameType) {
-        case 'tambah':
-            gameState.questions = generateTambahQuestions();
-            break;
-        case 'tolak':
-            gameState.questions = generateTolakQuestions();
-            break;
-        case 'masa':
-            gameState.questions = generateMasaQuestions();
-            break;
-        case 'wang':
-            gameState.questions = generateWangQuestions();
-            break;
-        case 'bentuk':
-            gameState.questions = generateBentukQuestions();
-            break;
+    // Generate questions based on game type
+    if (gameType === 'kenaliNombor') {
+        gameState.questions = generateKenaliNomborQuestions(difficulty);
+    } else if (gameType === 'tambah') {
+        gameState.questions = generateTambahQuestions();
+    } else if (gameType === 'tolak') {
+        gameState.questions = generateTolakQuestions();
+    } else if (gameType === 'masa') {
+        gameState.questions = generateMasaQuestions();
+    } else if (gameType === 'wang') {
+        gameState.questions = generateWangQuestions();
+    } else if (gameType === 'bentuk') {
+        gameState.questions = generateBentukQuestions();
     }
     
     document.getElementById('mainMenu').classList.add('hidden');
+    document.getElementById('difficultySelection').classList.add('hidden');
     document.getElementById('resultsScreen').classList.add('hidden');
     document.getElementById(`${gameType}Game`).classList.remove('hidden');
     
@@ -229,14 +263,16 @@ function startGame(gameType) {
 
 function backToMenu() {
     document.getElementById('mainMenu').classList.remove('hidden');
+    document.getElementById('difficultySelection').classList.add('hidden');
     document.getElementById('resultsScreen').classList.add('hidden');
     
-    const games = ['tambahGame', 'tolakGame', 'masaGame', 'wangGame', 'bentukGame'];
+    const games = ['kenaliNomborGame', 'tambahGame', 'tolakGame', 'masaGame', 'wangGame', 'bentukGame'];
     games.forEach(game => {
         document.getElementById(game).classList.add('hidden');
     });
     
     gameState.currentGame = null;
+    gameState.currentDifficulty = null;
 }
 
 function loadQuestion() {
@@ -254,6 +290,9 @@ function loadQuestion() {
     document.getElementById(`${gameType}QNum`).textContent = gameState.currentQuestion + 1;
     
     switch(gameType) {
+        case 'kenaliNombor':
+            displayKenaliNomborQuestion(question);
+            break;
         case 'tambah':
             displayTambahQuestion(question);
             break;
@@ -270,6 +309,62 @@ function loadQuestion() {
             displayBentukQuestion(question);
             break;
     }
+}
+
+// Display Kenali Nombor Question
+function displayKenaliNomborQuestion(question) {
+    const nomborVisual = document.getElementById('nomborVisual');
+    nomborVisual.innerHTML = '';
+    
+    const selectedFruit = fruits[Math.floor(Math.random() * fruits.length)];
+    
+    // Create items to display
+    for (let i = 0; i < question.count; i++) {
+        const item = document.createElement('span');
+        item.style.fontSize = '2.5em';
+        item.style.marginRight = '10px';
+        item.textContent = selectedFruit;
+        nomborVisual.appendChild(item);
+    }
+    
+    // Generate options with possible answers
+    const options = [question.count];
+    let difficulty = gameState.currentDifficulty;
+    let minRange, maxRange;
+    
+    if (difficulty === 'beginner') {
+        minRange = 1;
+        maxRange = 10;
+    } else if (difficulty === 'intermediate') {
+        minRange = 10;
+        maxRange = 50;
+    } else if (difficulty === 'advanced') {
+        minRange = 50;
+        maxRange = 100;
+    }
+    
+    // Generate 3 more different options
+    while (options.length < 4) {
+        const option = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+        if (!options.includes(option)) {
+            options.push(option);
+        }
+    }
+    
+    options.sort(() => Math.random() - 0.5);
+    
+    const optionsContainer = document.getElementById('kenaliNomborOptions');
+    optionsContainer.innerHTML = '';
+    
+    options.forEach(option => {
+        const button = document.createElement('button');
+        button.className = 'option-btn';
+        button.textContent = option;
+        button.onclick = () => checkKenaliNomborAnswer(option, question.count, 'kenaliNombor');
+        optionsContainer.appendChild(button);
+    });
+    
+    document.getElementById('kenaliNomborFeedback').innerHTML = '';
 }
 
 function displayTambahQuestion(question) {
@@ -563,6 +658,43 @@ function displayOptions(answer, gameType) {
     });
 }
 
+// Check Kenali Nombor Answer
+function checkKenaliNomborAnswer(selectedAnswer, correctAnswer, gameType) {
+    const feedbackElement = document.getElementById(`${gameType}Feedback`);
+    const buttons = document.querySelectorAll(`#${gameType}Options .option-btn`);
+    
+    buttons.forEach(btn => btn.disabled = true);
+    
+    const isCorrect = selectedAnswer === correctAnswer;
+    
+    // Highlight the clicked button
+    buttons.forEach(btn => {
+        let btnValue = parseInt(btn.textContent);
+        
+        if (btnValue === selectedAnswer) {
+            if (isCorrect) {
+                btn.classList.add('correct');
+                feedbackElement.classList.remove('wrong');
+                feedbackElement.classList.add('correct');
+                feedbackElement.textContent = '✓ Betul! Bagus sekali!';
+                gameState.score++;
+            } else {
+                btn.classList.add('wrong');
+                feedbackElement.classList.remove('correct');
+                feedbackElement.classList.add('wrong');
+                feedbackElement.textContent = `✗ Salah! Jawapan yang betul ialah ${correctAnswer}`;
+            }
+        }
+    });
+    
+    document.getElementById(`${gameType}Score`).textContent = gameState.score;
+    
+    gameState.currentQuestion++;
+    setTimeout(() => {
+        loadQuestion();
+    }, 2000);
+}
+
 function checkBentukAnswer(selectedAnswer, correctAnswer) {
     const gameType = 'bentuk';
     const feedbackElement = document.getElementById('bentukFeedback');
@@ -670,6 +802,7 @@ function checkAnswer(selectedAnswer, correctAnswer, gameType) {
 
 function showResults() {
     const gameType = gameState.currentGame;
+    const difficulty = gameState.currentDifficulty;
     const score = gameState.score;
     const total = gameState.totalQuestions;
     const percentage = Math.round((score / total) * 100);
@@ -701,6 +834,7 @@ function showResults() {
     }
     
     const gameNames = {
+        'kenaliNombor': 'Kenali Nombor',
         'tambah': 'Tambah',
         'tolak': 'Tolak',
         'masa': 'Masa',
@@ -708,13 +842,22 @@ function showResults() {
         'bentuk': 'Bentuk'
     };
     
+    let difficultyName = '';
+    if (difficulty === 'beginner') {
+        difficultyName = ' (Bijak Matematik 1)';
+    } else if (difficulty === 'intermediate') {
+        difficultyName = ' (Bijak Matematik 2)';
+    } else if (difficulty === 'advanced') {
+        difficultyName = ' (Bijak Matematik 3&4)';
+    }
+    
     const resultContent = document.getElementById('resultContent');
     resultContent.innerHTML = `
         <div class="result-emoji">${emoji}</div>
         <div class="result-score">${score} / ${total}</div>
         <div class="result-percentage" style="font-size: 1.5em; margin: 15px 0;">${percentage}%</div>
         <div class="result-message">${message}</div>
-        <div style="margin-top: 20px; font-size: 1em;">Permainan: ${gameNames[gameType]}</div>
+        <div style="margin-top: 20px; font-size: 1em;">Permainan: ${gameNames[gameType]}${difficultyName}</div>
     `;
 }
 
