@@ -83,10 +83,9 @@ function generateKenaliNomborQuestions(difficulty) {
         minRange = 10;
         maxRange = 50;
     } else if (difficulty === 'advanced') {
-       // minRange = 50;
-       // maxRange = 100;
-        { "text": "Tuliskan 26 dalam perkataan.", "options": ["Dua puluh empat", "Dua puluh enam", "Dua puluh sembilan", "Dua puluh lapan"], "answer": "Dua puluh enam" },
-    { "text": "Tuliskan 35 dalam perkataan.", "options": ["Tiga puluh empat", "Tiga puluh lima", "Tiga puluh enam", "Tiga puluh tiga"], "answer": "Tiga puluh lima" },
+       minRange = 50;
+       maxRange = 100;
+        
     }
     
     // Create 30 questions with random counts
