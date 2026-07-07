@@ -129,10 +129,10 @@ function generateKenaliNomborQuestions(difficulty) {
         minRange = 1;
         maxRange = 10;
     } else if (difficulty === 'intermediate') {
-        minRange = 1;
+        minRange = 5;
         maxRange = 20;
     } else if (difficulty === 'advanced') {
-        minRange = 1;
+        minRange = 10;
         maxRange = 50;
     }
     
