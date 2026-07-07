@@ -61,7 +61,7 @@ const timeOptions = [
     { hour: 7, minute: 15, label: '7:15' }
 ];
 
-/*
+
 // Shuffle array function
 function shuffleArray(array) {
     const shuffled = [...array];
@@ -101,122 +101,9 @@ function generateKenaliNomborQuestions(difficulty) {
     // Shuffle and return first 10
     const shuffled = shuffleArray(allQuestions);
     return shuffled.slice(0, 10);
-}*/
-
-
-// Utility untuk shuffle array
-function shuffleArray(array) {
-    return array.sort(() => Math.random() - 0.5);
 }
 
-// Peta nombor → perkataan ringkas (boleh tambah lagi)
-const numberWords = {
-    1: "satu", 2: "dua", 3: "tiga", 4: "empat", 5: "lima",
-    6: "enam", 7: "tujuh", 8: "lapan", 9: "sembilan", 10: "sepuluh",
-    11: "sebelas", 12: "dua belas", 13: "tiga belas", 14: "empat belas",
-    15: "lima belas", 16: "enam belas", 17: "tujuh belas", 18: "lapan belas",
-    19: "sembilan belas", 20: "dua puluh", 21: "dua puluh satu",
-    22: "dua puluh dua", 23: "dua puluh tiga", 24: "dua puluh empat",
-    25: "dua puluh lima", 26: "dua puluh enam",
-    30: "tiga puluh", 40: "empat puluh", 50: "lima puluh"
-};
-const correctWord = numberWords[number] || number.toString();
 
-// Generate questions untuk Kenali Nombor
-function generateKenaliNomborQuestions(difficulty) {
-    const allQuestions = [];
-    let minRange, maxRange;
-    
-    if (difficulty === 'beginner') {
-        minRange = 1;
-        maxRange = 10;
-    } else if (difficulty === 'intermediate') {
-        minRange = 5;
-        maxRange = 20;
-    } else if (difficulty === 'advanced') {
-        minRange = 10;
-        maxRange = 50;
-    }
-    
-    for (let i = 0; i < 30; i++) {
-        // Untuk advanced, campurkan dua jenis soalan
-        if (difficulty === 'advanced' && Math.random() < 0.5) {
-            // Soalan jenis word (contoh: tulis 26 dalam perkataan)
-            const number = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
-            const correctWord = numberWords[number] || number.toString();
-            
-            // Cari distractors (jawapan salah)
-            let options = new Set([correctWord]);
-            while (options.size < 4) {
-                let randomNum = Math.floor(Math.random() * maxRange) + 1;
-                let randomWord = numberWords[randomNum] || randomNum.toString();
-                options.add(randomWord);
-            }
-            
-            allQuestions.push({
-                type: 'word',
-                question: `Tulis nombor ${number} dalam perkataan.`,
-                correctAnswer: correctWord,
-                options: shuffleArray(Array.from(options))
-            });
-        } else {
-            // Soalan jenis items (kira nombor)
-            const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
-            allQuestions.push({
-                type: 'items',
-                count: count
-            });
-        }
-    }
-
-    //add baru
-function renderKenaliNomborQuestion(questionObj, qIndex) {
-    const questionText = document.getElementById('kenaliNomborQuestion');
-    const optionsContainer = document.getElementById('kenaliNomborOptions');
-    const nomborVisual = document.getElementById('nomborVisual');
-
-    optionsContainer.innerHTML = '';
-    nomborVisual.innerHTML = '';
-
-    if (questionObj.type === 'items') {
-        // Paparkan nombor dalam bentuk visual
-        nomborVisual.textContent = '🔴'.repeat(questionObj.count); 
-        questionText.textContent = "Berapa banyak benda di atas?";
-
-        // Generate pilihan jawapan
-        let options = new Set([questionObj.count]);
-        while (options.size < 4) {
-            options.add(Math.floor(Math.random() * 50) + 1);
-        }
-        shuffleArray(Array.from(options)).forEach(opt => {
-            const btn = document.createElement('button');
-            btn.textContent = opt;
-            btn.onclick = () => checkKenaliNomborAnswer(opt, questionObj.count);
-            optionsContainer.appendChild(btn);
-        });
-
-    } else if (questionObj.type === 'word') {
-        // Paparkan soalan dalam bentuk teks
-        questionText.textContent = questionObj.question;
-
-        // Generate pilihan jawapan perkataan
-        questionObj.options.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.textContent = opt;
-            btn.onclick = () => checkKenaliNomborAnswer(opt, questionObj.correctAnswer);
-            optionsContainer.appendChild(btn);
-        });
-    }
-
-    // Update counter
-    document.getElementById('kenaliNomborQNum').textContent = qIndex + 1;
-}
-
-    // tamat add baru
-    // Shuffle dan ambil 10
-    const shuffled = shuffleArray(allQuestions);
-    return shuffled.slice(0, 10);
-}
 
 
 // Generate all 30 questions for tambah
