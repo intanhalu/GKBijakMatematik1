@@ -166,7 +166,60 @@ function generateKenaliNomborQuestions(difficulty) {
             });
         }
     }
-    
+
+    //add baru
+function renderKenaliNomborQuestion(questionObj, qIndex) {
+    const questionText = document.getElementById('kenaliNomborQuestion');
+    const optionsContainer = document.getElementById('kenaliNomborOptions');
+    const nomborVisual = document.getElementById('nomborVisual');
+
+    optionsContainer.innerHTML = '';
+    nomborVisual.innerHTML = '';
+
+    if (questionObj.type === 'items') {
+        // Paparkan nombor dalam bentuk visual (contoh emoji 🔢 atau ikon)
+        nomborVisual.textContent = '🔢'.repeat(questionObj.count);
+        questionText.textContent = "Berapa banyak benda di atas?";
+
+        // Generate pilihan jawapan (contoh 4 pilihan rawak)
+        let options = new Set([questionObj.count]);
+        while (options.size < 4) {
+            options.add(Math.floor(Math.random() * 50) + 1);
+        }
+        Array.from(options).sort(() => Math.random() - 0.5).forEach(opt => {
+            const btn = document.createElement('button');
+            btn.textContent = opt;
+            btn.onclick = () => checkKenaliNomborAnswer(opt, questionObj.count);
+            optionsContainer.appendChild(btn);
+        });
+
+    } else if (questionObj.type === 'word') {
+        // Paparkan soalan dalam bentuk teks
+        questionText.textContent = questionObj.question;
+
+        // Generate pilihan jawapan perkataan
+        questionObj.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.textContent = opt;
+            btn.onclick = () => checkKenaliNomborAnswer(opt, questionObj.correctAnswer);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    // Update counter
+    document.getElementById('kenaliNomborQNum').textContent = qIndex + 1;
+}
+
+function checkKenaliNomborAnswer(selected, correct) {
+    const feedback = document.getElementById('kenaliNomborFeedback');
+    if (selected === correct) {
+        feedback.textContent = "✅ Betul!";
+    } else {
+        feedback.textContent = "❌ Salah!";
+    }
+}
+
+    // tamat add baru
     // Shuffle dan ambil 10
     const shuffled = shuffleArray(allQuestions);
     return shuffled.slice(0, 10);
