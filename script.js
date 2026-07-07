@@ -62,32 +62,32 @@ const timeOptions = [
 ];
 
 // Shuffle array function
-//function shuffleArray(array) {
-  //  const shuffled = [...array];
-   // for (let i = shuffled.length - 1; i > 0; i--) {
-      //  const j = Math.floor(Math.random() * (i + 1));
-     //   [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  //  }
-  //  return shuffled;
-//}
+function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+   }
+    return shuffled;
+}
 
 // Generate questions for Kenali Nombor (Recognize Numbers)
-//function generateKenaliNomborQuestions(difficulty) {
- //   const allQuestions = [];
-  //  let minRange, maxRange;
+function generateKenaliNomborQuestions(difficulty) {
+    const allQuestions = [];
+    let minRange, maxRange;
     
-  //  if (difficulty === 'beginner') {
-    //    minRange = 1;
-   //     maxRange = 10;
-   // } else if (difficulty === 'intermediate') {
-    //    minRange = 1;
-    //    maxRange = 20;
-   // } else if (difficulty === 'advanced') {
-   //    minRange = 1;
-     //  maxRange = 50;
+    if (difficulty === 'beginner') {
+        minRange = 1;
+        maxRange = 10;
+    } else if (difficulty === 'intermediate') {
+        minRange = 1;
+        maxRange = 20;
+    } else if (difficulty === 'advanced') {
+       minRange = 1;
+       maxRange = 50;
         
-    //}
-
+    }
+/*
 // Utility untuk shuffle array
 function shuffleArray(array) {
     return array.sort(() => Math.random() - 0.5);
@@ -156,20 +156,20 @@ function generateKenaliNomborQuestions(difficulty) {
     const shuffled = shuffleArray(allQuestions);
     return shuffled.slice(0, 10);
 }
-
+*/
     
-    // Create 30 questions with random counts
-  //  for (let i = 0; i < 30; i++) {
-     //   const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
-     //   allQuestions.push({
-      //      count: count,
-      //      type: 'items'
-      //  });
-   // }
+     Create 30 questions with random counts
+     for (let i = 0; i < 30; i++) {
+        const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+        allQuestions.push({
+            count: count,
+            type: 'items'
+        });
+    }
     
     // Shuffle and return first 10
-  //  const shuffled = shuffleArray(allQuestions);
-   // return shuffled.slice(0, 10);
+    const shuffled = shuffleArray(allQuestions);
+    return shuffled.slice(0, 10);
 /}
 
 // Generate all 30 questions for tambah
