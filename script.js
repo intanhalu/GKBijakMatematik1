@@ -159,18 +159,18 @@ function generateKenaliNomborQuestions(difficulty) {
 
     
     // Create 30 questions with random counts
-    for (let i = 0; i < 30; i++) {
-        const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
-        allQuestions.push({
-            count: count,
-            type: 'items'
-        });
-    }
+  //  for (let i = 0; i < 30; i++) {
+     //   const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+     //   allQuestions.push({
+      //      count: count,
+      //      type: 'items'
+      //  });
+   // }
     
     // Shuffle and return first 10
-    const shuffled = shuffleArray(allQuestions);
-    return shuffled.slice(0, 10);
-}
+  //  const shuffled = shuffleArray(allQuestions);
+   // return shuffled.slice(0, 10);
+/}
 
 // Generate all 30 questions for tambah
 function generateTambahQuestions() {
