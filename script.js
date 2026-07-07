@@ -87,77 +87,7 @@ function generateKenaliNomborQuestions(difficulty) {
        maxRange = 50;
         
     }
-/*
-// Utility untuk shuffle array
-function shuffleArray(array) {
-    return array.sort(() => Math.random() - 0.5);
-}
 
-// Peta nombor → perkataan ringkas (boleh tambah lagi)
-const numberWords = {
-    1: "satu", 2: "dua", 3: "tiga", 4: "empat", 5: "lima",
-    6: "enam", 7: "tujuh", 8: "lapan", 9: "sembilan", 10: "sepuluh",
-    11: "sebelas", 12: "dua belas", 13: "tiga belas", 14: "empat belas",
-    15: "lima belas", 16: "enam belas", 17: "tujuh belas", 18: "lapan belas",
-    19: "sembilan belas", 20: "dua puluh", 21: "dua puluh satu",
-    22: "dua puluh dua", 23: "dua puluh tiga", 24: "dua puluh empat",
-    25: "dua puluh lima", 26: "dua puluh enam",
-    30: "tiga puluh", 40: "empat puluh", 50: "lima puluh"
-};
-
-// Generate questions untuk Kenali Nombor
-function generateKenaliNomborQuestions(difficulty) {
-    const allQuestions = [];
-    let minRange, maxRange;
-    
-    if (difficulty === 'beginner') {
-        minRange = 1;
-        maxRange = 10;
-    } else if (difficulty === 'intermediate') {
-        minRange = 1;
-        maxRange = 20;
-    } else if (difficulty === 'advanced') {
-        minRange = 1;
-        maxRange = 50;
-    }
-    
-    for (let i = 0; i < 30; i++) {
-        // Untuk advanced, campurkan dua jenis soalan
-        if (difficulty === 'advanced' && Math.random() < 0.5) {
-            // Soalan jenis word (contoh: tulis 26 dalam perkataan)
-            const number = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
-            const correctWord = numberWords[number] || number.toString();
-            
-            // Cari distractors (jawapan salah)
-            let options = new Set([correctWord]);
-            while (options.size < 4) {
-                let randomNum = Math.floor(Math.random() * maxRange) + 1;
-                let randomWord = numberWords[randomNum] || randomNum.toString();
-                options.add(randomWord);
-            }
-            
-            allQuestions.push({
-                type: 'word',
-                question: `Tulis nombor ${number} dalam perkataan.`,
-                correctAnswer: correctWord,
-                options: shuffleArray(Array.from(options))
-            });
-        } else {
-            // Soalan jenis items (kira nombor)
-            const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
-            allQuestions.push({
-                type: 'items',
-                count: count
-            });
-        }
-    }
-    
-    // Shuffle dan ambil 10
-    const shuffled = shuffleArray(allQuestions);
-    return shuffled.slice(0, 10);
-}
-*/
-    
      //Create 30 questions with random counts
      for (let i = 0; i < 30; i++) {
         const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
@@ -170,7 +100,7 @@ function generateKenaliNomborQuestions(difficulty) {
     // Shuffle and return first 10
     const shuffled = shuffleArray(allQuestions);
     return shuffled.slice(0, 10);
-/}
+}
 
 // Generate all 30 questions for tambah
 function generateTambahQuestions() {
