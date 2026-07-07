@@ -158,7 +158,7 @@ function generateKenaliNomborQuestions(difficulty) {
 }
 */
     
-     Create 30 questions with random counts
+     //Create 30 questions with random counts
      for (let i = 0; i < 30; i++) {
         const count = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
         allQuestions.push({
